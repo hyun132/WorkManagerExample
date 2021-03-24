@@ -9,13 +9,15 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FilteringWorker (context: Context, params: WorkerParameters): Worker(context,params) {
+class DownLoadingWorker (context: Context, params: WorkerParameters): Worker(context,params) {
+
     override fun doWork(): Result {
         try {
 
             for (i in 0..1000) {
-                Log.i("MYTAG", "Filering $i")
+                Log.i("MYTAG", "DownLoading $i")
             }
+
             return Result.success()
         }catch (e: Exception){
             return Result.failure()

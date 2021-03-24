@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOneTimeWorkRequest() {
         val workManager = WorkManager.getInstance(applicationContext)
-        val constriant = Constraints.Builder().setRequiresCharging(true).setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val constriant = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
 
         val uploadRequest =
@@ -33,8 +33,13 @@ class MainActivity : AppCompatActivity() {
         val filteringRequest = OneTimeWorkRequest.Builder(FilteringWorker::class.java).build()
 
         val compressRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java).build()
+        val downloadRequest = OneTimeWorkRequest.Builder(DownLoadingWorker::class.java).build()
 
-        workManager.beginWith(filteringRequest)
+        val paralleWorks=  mutableListOf<OneTimeWorkRequest>()
+        paralleWorks.add(filteringRequest)
+        paralleWorks.add(downloadRequest)
+
+        workManager.beginWith(paralleWorks)
             .then(compressRequest)
             .then(uploadRequest)
             .enqueue()
