@@ -30,7 +30,16 @@ class MainActivity : AppCompatActivity() {
         val uploadRequest =
             OneTimeWorkRequest.Builder(UploadWorker::class.java).setConstraints(constriant).build()
 
-        workManager.enqueue(uploadRequest)
+        val filteringRequest = OneTimeWorkRequest.Builder(FilteringWorker::class.java).build()
+
+        val compressRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java).build()
+
+        workManager.beginWith(filteringRequest)
+            .then(compressRequest)
+            .then(uploadRequest)
+            .enqueue()
+
+//        workManager.enqueue(uploadRequest)
         workManager.getWorkInfoByIdLiveData(uploadRequest.id)
             .observe(this, Observer{
                 findViewById<TextView>(R.id.textView).text = it.state.name
