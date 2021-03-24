@@ -6,11 +6,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.workmanagerexample.UploadWorker.Companion.WORKER_KEY
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +16,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            setOneTimeWorkRequest()
+//            setOneTimeWorkRequest()
+            setPeriodicWorkRequest()
         }
     }
 
@@ -54,5 +53,10 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
                 }
             })
+    }
+
+    private fun setPeriodicWorkRequest(){
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(DownLoadingWorker::class.java,20,TimeUnit.MINUTES).build()
+        WorkManager.getInstance(applicationContext).enqueue(periodicWorkRequest)
     }
 }
